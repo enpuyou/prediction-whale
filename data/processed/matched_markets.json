@@ -1,0 +1,62 @@
+[
+  {
+    "question": "Who will Trump nominate as Fed Chair?",
+    "poly_slug": "who-will-trump-nominate-as-fed-chair",
+    "poly_event_id": "35908",
+    "kalshi_event_ticker": "KXFEDCHAIRNOM-29",
+    "similarity": 1.0,
+    "poly_volume_usd": 540827605,
+    "poly_num_markets": 39,
+    "notes": "Perfect 1.0 match. Identical question on both platforms. $541M volume on Polymarket \u2014 highest-volume non-sports exact match. Categorical question with 39 sub-markets."
+  },
+  {
+    "question": "How long will the Government Shutdown last?",
+    "poly_slug": "how-long-will-the-next-government-shutdown-last",
+    "poly_event_id": "186375",
+    "kalshi_event_ticker": "KXGOVTSHUTLENGTH-26FEB07",
+    "similarity": 1.0,
+    "poly_volume_usd": 23495074,
+    "poly_num_markets": 11,
+    "notes": "Perfect 1.0 match. Recent Feb 2026 event, active on both platforms. Good test of real-time price convergence during a live political event."
+  },
+  {
+    "question": "Who will be the next Pope?",
+    "poly_slug": "who-will-be-the-next-pope",
+    "poly_event_id": "19581",
+    "kalshi_event_ticker": "KXNEWPOPE-70",
+    "similarity": 0.9962,
+    "poly_volume_usd": 30143338,
+    "poly_num_markets": 29,
+    "notes": "Near-perfect match (0.996). $30M volume. Global event with broad interest \u2014 not US-politics-specific. 29 sub-markets on Polymarket."
+  },
+  {
+    "question": "Where will Zelenskyy and Putin meet next?",
+    "poly_slug": "where-will-trump-and-putin-meet-next-393",
+    "poly_event_id": "38374",
+    "kalshi_event_ticker": "KXPUTINZELENSKYYLOCATION-28",
+    "similarity": 0.9872,
+    "poly_volume_usd": 18496420,
+    "poly_num_markets": 27,
+    "notes": "High match (0.987). Geopolitical event with $18.5M volume. Categorical with 27 location sub-markets. Good for divergence analysis."
+  },
+  {
+    "question": "Who will be Trump's Defense Secretary?",
+    "poly_slug": "who-will-be-trumps-defense-secretary",
+    "poly_event_id": "14430",
+    "kalshi_event_ticker": "KXNEXTDEF-29",
+    "similarity": 0.9728,
+    "poly_volume_usd": 14011760,
+    "poly_num_markets": 15,
+    "notes": "High match (0.973). Political appointment question with $14M volume. 15 candidate sub-markets. Active political speculation on both platforms."
+  },
+  {
+    "question": "Champions League Winner",
+    "poly_slug": "champions-league-winner-2025",
+    "poly_event_id": "12585",
+    "kalshi_event_ticker": "KXUCL-26",
+    "similarity": 1.0,
+    "poly_volume_usd": 1001676674,
+    "poly_num_markets": 36,
+    "notes": "Perfect 1.0 match. $1B volume \u2014 largest sports market on both platforms. 36 club sub-markets. High whale/manipulation risk: insider knowledge of injuries, lineup leaks, club transfers all create information asymmetry."
+  }
+]

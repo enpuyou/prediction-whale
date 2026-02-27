@@ -1,0 +1,19 @@
+Network Analysis Summary
+============================================================
+
+Wisdom Score: 62.1 / 100
+Rating: MODERATE - Some concentration but diversified participation
+
+Network Metrics:
+  Nodes: 63,793
+  Edges: 4,127,204
+  Density: 0.0020
+  Communities: 1261
+  Modularity: 0.8329
+
+Volume Concentration:
+  Top 5 wallets: 7.8%
+  Gini coefficient: 0.958
+
+Network Centralization:
+  Freeman centralization: 0.0000

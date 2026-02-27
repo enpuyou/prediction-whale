@@ -1,0 +1,743 @@
+DBSCAN Cluster Summary
+======================================================================
+Best parameters: eps=0.3, min_samples=10
+Silhouette score: 0.7017
+Total clusters: 104
+Total outliers: 4446 (7.0%)
+======================================================================
+
+Cluster -1: SUSPICIOUS (outliers)
+  Wallets: 4,446
+  Avg volume: $49,790
+  Avg trades: 29
+  Avg buy ratio: 0.64
+  Avg timing entropy: 0.89
+
+Cluster 0: RETAIL
+  Wallets: 350
+  Avg volume: $1,008
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 1: RETAIL
+  Wallets: 7,880
+  Avg volume: $557
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+
+Cluster 2: RETAIL
+  Wallets: 8,337
+  Avg volume: $255
+  Avg trades: 1
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 3: RETAIL
+  Wallets: 77
+  Avg volume: $70,304
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 4: RETAIL
+  Wallets: 15,609
+  Avg volume: $560
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 5: RETAIL
+  Wallets: 16,309
+  Avg volume: $985
+  Avg trades: 1
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 6: RETAIL
+  Wallets: 87
+  Avg volume: $636
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.69
+
+Cluster 7: RETAIL
+  Wallets: 2,165
+  Avg volume: $349
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.68
+
+Cluster 8: RETAIL
+  Wallets: 838
+  Avg volume: $655
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 1.07
+
+Cluster 9: RETAIL
+  Wallets: 125
+  Avg volume: $732
+  Avg trades: 8
+  Avg buy ratio: 0.53
+  Avg timing entropy: 1.50
+
+Cluster 10: RETAIL
+  Wallets: 71
+  Avg volume: $534
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 11: RETAIL
+  Wallets: 22
+  Avg volume: $1,273
+  Avg trades: 8
+  Avg buy ratio: 0.50
+  Avg timing entropy: 1.79
+
+Cluster 12: RETAIL
+  Wallets: 564
+  Avg volume: $1,171
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.68
+
+Cluster 13: RETAIL
+  Wallets: 16
+  Avg volume: $219
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 14: RETAIL
+  Wallets: 895
+  Avg volume: $1,101
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.82
+
+Cluster 15: RETAIL
+  Wallets: 218
+  Avg volume: $1,734
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 16: RETAIL
+  Wallets: 30
+  Avg volume: $237
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 1.38
+
+Cluster 17: RETAIL
+  Wallets: 16
+  Avg volume: $35,813
+  Avg trades: 12
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 18: RETAIL
+  Wallets: 673
+  Avg volume: $1,085
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 19: RETAIL
+  Wallets: 368
+  Avg volume: $529
+  Avg trades: 4
+  Avg buy ratio: 0.49
+  Avg timing entropy: 1.08
+
+Cluster 20: RETAIL
+  Wallets: 47
+  Avg volume: $1,383
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 1.08
+
+Cluster 21: RETAIL
+  Wallets: 31
+  Avg volume: $872
+  Avg trades: 7
+  Avg buy ratio: 0.52
+  Avg timing entropy: 1.57
+
+Cluster 22: RETAIL
+  Wallets: 271
+  Avg volume: $650
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 1.38
+
+Cluster 23: RETAIL
+  Wallets: 43
+  Avg volume: $456
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+
+Cluster 24: RETAIL
+  Wallets: 139
+  Avg volume: $60,473
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 25: RETAIL
+  Wallets: 297
+  Avg volume: $48,587
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 26: RETAIL
+  Wallets: 23
+  Avg volume: $428
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 27: RETAIL
+  Wallets: 32
+  Avg volume: $855
+  Avg trades: 3
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 28: RETAIL
+  Wallets: 96
+  Avg volume: $170
+  Avg trades: 6
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 29: RETAIL
+  Wallets: 45
+  Avg volume: $1,912
+  Avg trades: 5
+  Avg buy ratio: 0.71
+  Avg timing entropy: 1.05
+
+Cluster 30: RETAIL
+  Wallets: 145
+  Avg volume: $450
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 31: RETAIL
+  Wallets: 176
+  Avg volume: $579
+  Avg trades: 5
+  Avg buy ratio: 0.45
+  Avg timing entropy: 1.21
+
+Cluster 32: RETAIL
+  Wallets: 36
+  Avg volume: $2,054
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 1.07
+
+Cluster 33: RETAIL
+  Wallets: 79
+  Avg volume: $55,167
+  Avg trades: 1
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 34: RETAIL
+  Wallets: 159
+  Avg volume: $1,246
+  Avg trades: 3
+  Avg buy ratio: 0.33
+  Avg timing entropy: 0.00
+
+Cluster 35: RETAIL
+  Wallets: 136
+  Avg volume: $1,042
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 36: RETAIL
+  Wallets: 11
+  Avg volume: $556
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.64
+
+Cluster 37: RETAIL
+  Wallets: 208
+  Avg volume: $1,453
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 38: RETAIL
+  Wallets: 219
+  Avg volume: $374
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.69
+
+Cluster 39: RETAIL
+  Wallets: 32
+  Avg volume: $1,413
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.67
+
+Cluster 40: RETAIL
+  Wallets: 236
+  Avg volume: $351
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 41: RETAIL
+  Wallets: 95
+  Avg volume: $1,793
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 42: RETAIL
+  Wallets: 185
+  Avg volume: $405
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.69
+
+Cluster 43: RETAIL
+  Wallets: 75
+  Avg volume: $769
+  Avg trades: 3
+  Avg buy ratio: 0.67
+  Avg timing entropy: 0.00
+
+Cluster 44: RETAIL
+  Wallets: 22
+  Avg volume: $2,918
+  Avg trades: 6
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 45: RETAIL
+  Wallets: 70
+  Avg volume: $331
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 46: RETAIL
+  Wallets: 109
+  Avg volume: $890
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+
+Cluster 47: RETAIL
+  Wallets: 25
+  Avg volume: $2,253
+  Avg trades: 3
+  Avg buy ratio: 0.33
+  Avg timing entropy: 0.64
+
+Cluster 48: RETAIL
+  Wallets: 204
+  Avg volume: $88,666
+  Avg trades: 1
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 49: RETAIL
+  Wallets: 7
+  Avg volume: $293
+  Avg trades: 3
+  Avg buy ratio: 0.67
+  Avg timing entropy: 0.64
+
+Cluster 50: RETAIL
+  Wallets: 76
+  Avg volume: $30,611
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 51: RETAIL
+  Wallets: 11
+  Avg volume: $2,828
+  Avg trades: 7
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 52: RETAIL
+  Wallets: 11
+  Avg volume: $385
+  Avg trades: 3
+  Avg buy ratio: 0.33
+  Avg timing entropy: 0.00
+
+Cluster 53: RETAIL
+  Wallets: 106
+  Avg volume: $101
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 54: RETAIL
+  Wallets: 11
+  Avg volume: $3,077
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.56
+
+Cluster 55: RETAIL
+  Wallets: 29
+  Avg volume: $814
+  Avg trades: 3
+  Avg buy ratio: 0.67
+  Avg timing entropy: 0.64
+
+Cluster 56: RETAIL
+  Wallets: 17
+  Avg volume: $55,313
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.69
+
+Cluster 57: RETAIL
+  Wallets: 21
+  Avg volume: $45
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 1.39
+
+Cluster 58: RETAIL
+  Wallets: 112
+  Avg volume: $41
+  Avg trades: 6
+  Avg buy ratio: 0.50
+  Avg timing entropy: 1.10
+
+Cluster 59: RETAIL
+  Wallets: 19
+  Avg volume: $523
+  Avg trades: 3
+  Avg buy ratio: 0.34
+  Avg timing entropy: 0.64
+
+Cluster 60: RETAIL
+  Wallets: 17
+  Avg volume: $3,646
+  Avg trades: 6
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 61: RETAIL
+  Wallets: 14
+  Avg volume: $900
+  Avg trades: 3
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.63
+
+Cluster 62: RETAIL
+  Wallets: 83
+  Avg volume: $404
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 63: RETAIL
+  Wallets: 67
+  Avg volume: $969
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 64: RETAIL
+  Wallets: 44
+  Avg volume: $622
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.00
+
+Cluster 65: RETAIL
+  Wallets: 32
+  Avg volume: $315
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.69
+
+Cluster 66: RETAIL
+  Wallets: 20
+  Avg volume: $352
+  Avg trades: 3
+  Avg buy ratio: 0.00
+  Avg timing entropy: 1.09
+
+Cluster 67: RETAIL
+  Wallets: 22
+  Avg volume: $649
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 68: RETAIL
+  Wallets: 15
+  Avg volume: $1,185
+  Avg trades: 5
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 69: RETAIL
+  Wallets: 29
+  Avg volume: $715
+  Avg trades: 4
+  Avg buy ratio: 0.24
+  Avg timing entropy: 1.38
+
+Cluster 70: RETAIL
+  Wallets: 73
+  Avg volume: $1,578
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.64
+
+Cluster 71: RETAIL
+  Wallets: 60
+  Avg volume: $661
+  Avg trades: 3
+  Avg buy ratio: 0.32
+  Avg timing entropy: 1.09
+
+Cluster 72: RETAIL
+  Wallets: 25
+  Avg volume: $372
+  Avg trades: 3
+  Avg buy ratio: 0.00
+  Avg timing entropy: 1.09
+
+Cluster 73: RETAIL
+  Wallets: 10
+  Avg volume: $142
+  Avg trades: 3
+  Avg buy ratio: 0.67
+  Avg timing entropy: 0.64
+
+Cluster 74: RETAIL
+  Wallets: 12
+  Avg volume: $301
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 75: RETAIL
+  Wallets: 12
+  Avg volume: $594
+  Avg trades: 4
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 76: RETAIL
+  Wallets: 17
+  Avg volume: $1,050
+  Avg trades: 4
+  Avg buy ratio: 0.66
+  Avg timing entropy: 0.65
+
+Cluster 77: RETAIL
+  Wallets: 14
+  Avg volume: $768
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+
+Cluster 78: RETAIL
+  Wallets: 14
+  Avg volume: $1,438
+  Avg trades: 11
+  Avg buy ratio: 0.51
+  Avg timing entropy: 0.95
+
+Cluster 79: RETAIL
+  Wallets: 26
+  Avg volume: $57,790
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.64
+
+Cluster 80: RETAIL
+  Wallets: 12
+  Avg volume: $866
+  Avg trades: 3
+  Avg buy ratio: 0.00
+  Avg timing entropy: 1.09
+
+Cluster 81: RETAIL
+  Wallets: 26
+  Avg volume: $417
+  Avg trades: 4
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+
+Cluster 82: RETAIL
+  Wallets: 33
+  Avg volume: $813
+  Avg trades: 7
+  Avg buy ratio: 0.51
+  Avg timing entropy: 1.68
+
+Cluster 83: RETAIL
+  Wallets: 12
+  Avg volume: $2,194
+  Avg trades: 4
+  Avg buy ratio: 0.75
+  Avg timing entropy: 0.56
+
+Cluster 84: RETAIL
+  Wallets: 21
+  Avg volume: $58
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 85: RETAIL
+  Wallets: 21
+  Avg volume: $165
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+
+Cluster 86: RETAIL
+  Wallets: 24
+  Avg volume: $994
+  Avg trades: 3
+  Avg buy ratio: 0.67
+  Avg timing entropy: 0.64
+
+Cluster 87: RETAIL
+  Wallets: 13
+  Avg volume: $234
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.68
+
+Cluster 88: RETAIL
+  Wallets: 14
+  Avg volume: $1,703
+  Avg trades: 7
+  Avg buy ratio: 0.54
+  Avg timing entropy: 1.02
+
+Cluster 89: RETAIL
+  Wallets: 11
+  Avg volume: $39,582
+  Avg trades: 1
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 90: RETAIL
+  Wallets: 25
+  Avg volume: $2,126
+  Avg trades: 3
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 91: RETAIL
+  Wallets: 42
+  Avg volume: $1,045
+  Avg trades: 3
+  Avg buy ratio: 0.67
+  Avg timing entropy: 1.10
+
+Cluster 92: RETAIL
+  Wallets: 26
+  Avg volume: $2,665
+  Avg trades: 5
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 93: RETAIL
+  Wallets: 16
+  Avg volume: $604
+  Avg trades: 2
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 94: RETAIL
+  Wallets: 13
+  Avg volume: $783
+  Avg trades: 3
+  Avg buy ratio: 0.33
+  Avg timing entropy: 0.64
+
+Cluster 95: RETAIL
+  Wallets: 14
+  Avg volume: $3,000
+  Avg trades: 3
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.00
+
+Cluster 96: RETAIL
+  Wallets: 14
+  Avg volume: $268
+  Avg trades: 2
+  Avg buy ratio: 0.00
+  Avg timing entropy: 0.68
+
+Cluster 97: RETAIL
+  Wallets: 12
+  Avg volume: $2,206
+  Avg trades: 6
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.60
+
+Cluster 98: RETAIL
+  Wallets: 11
+  Avg volume: $1,168
+  Avg trades: 5
+  Avg buy ratio: 0.80
+  Avg timing entropy: 1.33
+
+Cluster 99: RETAIL
+  Wallets: 13
+  Avg volume: $1,498
+  Avg trades: 9
+  Avg buy ratio: 0.49
+  Avg timing entropy: 1.55
+
+Cluster 100: RETAIL
+  Wallets: 11
+  Avg volume: $1,761
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 101: RETAIL
+  Wallets: 11
+  Avg volume: $6,802
+  Avg trades: 8
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.00
+
+Cluster 102: RETAIL
+  Wallets: 20
+  Avg volume: $3,337
+  Avg trades: 4
+  Avg buy ratio: 1.00
+  Avg timing entropy: 0.60
+
+Cluster 103: RETAIL
+  Wallets: 10
+  Avg volume: $44
+  Avg trades: 2
+  Avg buy ratio: 0.50
+  Avg timing entropy: 0.69
+

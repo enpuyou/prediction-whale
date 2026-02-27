@@ -1,0 +1,16 @@
+{
+  "wisdom_score": 62.05827578143159,
+  "rating": "MODERATE - Some concentration but diversified participation",
+  "metrics": {
+    "top5_volume_share": 0.07785690261464642,
+    "gini_coefficient": 0.958441216049043,
+    "network_centralization": 2.4674088642705904e-06,
+    "modularity": 0.8328759282838002
+  },
+  "network": {
+    "nodes": 63793,
+    "edges": 4127204,
+    "density": 0.0020283677033203994,
+    "communities": 1261
+  }
+}
