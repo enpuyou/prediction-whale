@@ -1,17 +1,21 @@
 # Prediction Market Integrity Auditor - Jupyter Notebooks for Google Colab
 
-All notebooks are ready to run in Google Colab without any local setup. Simply download the `.ipynb` files and upload them to Colab.
+**Run a complete prediction market analysis in Google Colab - zero local setup required!**
+
+These 6 Jupyter notebooks analyze Polymarket and Kalshi to detect whale manipulation using semantic event matching, multi-threaded data collection, DBSCAN clustering, network analysis, and Wisdom Score computation.
+
+All notebooks are ready to run in Google Colab without any local dependencies. Simply download the `.ipynb` files and upload them to Colab.
 
 ## 📚 Notebook Overview
 
-| Phase | File | Runtime | Task | Notes |
-|-------|------|---------|------|-------|
-| **2** | `02_market_matching.ipynb` | ~5 min | Match Polymarket & Kalshi events using semantic similarity | Requires: matched_markets.json from Phase 1 |
-| **3** | `03_full_data_collection.ipynb` | ~15 min | Collect 237k+ Polymarket & 160k+ Kalshi trades | Multi-threaded API collection (~54 MB download) |
-| **4** | `04_feature_engineering_dbscan.ipynb` | ~60 min | Engineer 11 wallet features + DBSCAN clustering | **Longest phase** - identify 104 clusters + 4,446 outliers |
-| **5** | `05_network_wisdom_score.ipynb` | ~5 min | Build wallet interaction network + compute Wisdom Score | Outputs: 62.1/100 (MODERATE integrity) |
-| **6** | `06_cross_platform_comparison.ipynb` | ~2 min | Compare prices/volumes across platforms | Identify price divergence windows |
-| **7** | `07_visualization_polish.ipynb` | ~3 min | Generate 7 publication-ready charts + summary report | Creates all PNG visualizations |
+| Phase | File | Runtime | Task | Output |
+| --- | --- | --- | --- | --- |
+| **2** | `02_market_matching.ipynb` | ~5 min | Match Polymarket & Kalshi events using semantic similarity (sentence-transformers) | matched_markets.json (6 pairs) |
+| **3** | `03_full_data_collection.ipynb` | ~15 min | Multi-threaded API collection from both platforms (2000 trades/market) | 237k+ Poly + 160k+ Kalshi trades |
+| **4** | `04_feature_engineering_dbscan.ipynb` | ~60 min | Engineer 11 wallet features + DBSCAN clustering with parameter grid search | 104 clusters + 4,446 outliers (7%) |
+| **5** | `05_network_wisdom_score.ipynb` | ~5 min | Build wallet interaction network (Louvain communities) + compute Wisdom Score | Wisdom Score: 62.1/100 (MODERATE) |
+| **6** | `06_cross_platform_comparison.ipynb` | ~2 min | Hourly price alignment + correlation + divergence analysis | price_comparison.csv |
+| **7** | `07_visualization_polish.ipynb` | ~3 min | Create 7 publication-ready charts (300 DPI) + analysis report | figures/ + ANALYSIS_REPORT.txt |
 
 ## 🚀 Quick Start in Google Colab
 
@@ -115,12 +119,21 @@ Network Analysis:
 
 ## 📖 For More Details
 
-- See `COLAB_GUIDE.md` for complete setup instructions
-- Read `REPORT.md` for methodology and detailed analysis
-- Check `README.md` in project root for architecture overview
+- **[COLAB_GUIDE.md](../COLAB_GUIDE.md)** - Complete Colab setup, expected runtimes, troubleshooting
+- **[REPORT.md](../REPORT.md)** - Detailed methodology, findings, and critical evaluation
+- **[README.md](../README.md)** - Project overview, architecture, and key concepts
+
+## 🎯 What You'll Learn
+
+- **Semantic matching**: How to align events across prediction platforms
+- **Feature engineering**: 11 wallet features for behavioral classification
+- **DBSCAN clustering**: Unsupervised detection of suspicious traders (7% outlier rate)
+- **Network analysis**: Wallet interaction graphs and Louvain communities (1,261)
+- **Wisdom Score**: Composite metric combining volume concentration, network centralization, and modularity
+- **Market integrity**: Concrete metrics for evaluating crowd manipulation risk
 
 ---
 
 **All notebooks are ready to run immediately in Colab!** ✅
 
-Choose a phase above and start analyzing prediction markets for whale manipulation.
+Start with Phase 2 and run through Phase 7 (~90 minutes total). Each notebook is independent and can be rerun anytime.
