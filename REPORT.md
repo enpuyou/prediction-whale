@@ -4,7 +4,7 @@
 
 **MSIS 521A · Winter 2026**
 **Date:** February 27, 2026
-**Data:** 237,791 trades · 63,793 wallets · 6 matched markets · Nov 2024 – Feb 2026
+**Data:** 237,791 trades (2,000 per sub-market, most recent) · 63,793 wallets · 6 matched markets · Temporal coverage varies (1–184 days per sub-market)
 
 ---
 
@@ -99,7 +99,9 @@ with ThreadPoolExecutor(max_workers=4) as executor:
         cid, trades = future.result()
 ```
 
-Collection parameters: up to 2,000 trades per sub-market, 100ms delay between requests, automatic retry on HTTP 429 (rate-limit) responses.
+Collection parameters: **up to 2,000 trades per sub-market** (most recent), 100ms delay between requests, automatic retry on HTTP 429 (rate-limit) responses.
+
+**Why 2,000 per sub-market?** Polymarket's data API returns trades in reverse chronological order (newest first) and implements cursor-based pagination. The 2,000-trade ceiling was a practical compromise between data completeness and collection speed. However, this means we obtained the **most recent 2,000 trades**, not a representative sample. For high-volume markets like Champions League (launched Dec 2024, $1B+ volume), the API reached 2,000 trades within days, cutting off early market activity. Lower-volume markets show better temporal spread (78–184 days for 2,000 trades), but still exclude earlier participants.
 
 ### Dataset Summary
 
@@ -109,12 +111,20 @@ Collection parameters: up to 2,000 trades per sub-market, 100ms delay between re
 | Unique wallets | 63,793 |
 | Total Kalshi trades | 160,000 |
 | Kalshi markets covered | 702 |
-| Date range | Nov 15, 2024 – Feb 27, 2026 |
+| Collection strategy | 2,000 trades per sub-market (most recent only) |
+| **Actual temporal coverage** | **1 day – 6 months per sub-market** |
 | Total Polymarket volume | $317,246,935 |
 | Avg trade size | $1,334 |
 | Median trade size | $34 |
 | Buy-side proportion | 63.2% |
 | Unique sub-markets (conditionIds) | 125 |
+
+**⚠️ Critical temporal limitation**: The 2,000-trade cap per sub-market is **not representative of full market history**. We collected the 2,000 most recent trades per conditionId, which means:
+- High-volume markets (Champions League $1B): 2,000 trades compressed into **1–22 days** near market resolution
+- Lower-volume markets (Fed Chair, Trump/Putin): 2,000 trades stretched across **78–184 days**
+- **85% of sub-markets hit the exact 2,000 limit**, indicating earlier participants are absent from the dataset
+- **Early traders** (Nov 2024 – mid-2025) are systematically under-represented in volatile markets
+- This analysis captures **end-game market behavior**, not the full evolution from opening to resolution
 
 The large gap between mean ($1,334) and median ($34) trade size immediately signals heavy right-skew: a small number of very large trades dominate total volume.
 
@@ -460,7 +470,14 @@ The key insight: **it is possible for a market to have extreme inequality AND go
 
 **1. Polymarket-only clustering**: DBSCAN was applied only to Polymarket wallets because Kalshi does not expose user identifiers in its public API. The cross-platform comparison is therefore asymmetric: we can characterize Polymarket traders in detail but can only observe aggregate Kalshi behavior.
 
-**2. Two-thousand-trade ceiling**: We capped collection at 2,000 trades per sub-market. For high-volume markets like Champions League ($1B), this significantly under-samples the full trade history. Wallets that traded early in the market's life are invisible to our analysis. This likely understates total suspicious activity.
+**2. Severe recency bias from 2,000-trade cap**: We capped collection at 2,000 trades per sub-market due to API pagination constraints. Analysis reveals this is **not a random sample of the market history**:
+- **106 of 125 sub-markets (85%) hit exactly 2,000 trades**, indicating the cap is binding
+- Champions League: 2,000 trades cover only **1–22 days** near market resolution
+- Fed Chair (lower volume): 2,000 trades stretch **78–184 days**
+- Early traders (Nov 2024 – mid-2025) are systematically absent from high-volume markets
+- **This analysis captures end-game market behavior, not market evolution**
+
+Implication: Wallets that were active early in market life are invisible. The suspicious wallets we identified may represent a subset of late-stage participants, missing earlier informed traders or coordinators who exited positions. This likely **understates total suspicious activity** over the market's full lifespan. A more complete analysis would require full trade history access, not the most-recent-N-trades strategy.
 
 **3. Proxy wallet ambiguity**: Polymarket `proxyWallet` addresses are smart contract accounts, not directly-owned wallets. A single real-world actor can operate multiple proxy wallets. The 63,793 "wallets" in our dataset may represent significantly fewer unique individuals. If the 4,446 suspicious wallets are controlled by, say, 500 actors each running 8–9 proxies, the concentration problem is far more severe than our metrics suggest.
 
