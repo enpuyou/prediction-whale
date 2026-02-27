@@ -16,8 +16,18 @@ This project analyzes 237,791 trades from 63,793 unique wallets across 6 matched
 prediction-whale/
 ├── REPORT.md                          ← Main comprehensive report (read this first!)
 ├── README.md                          ← This file
+├── COLAB_GUIDE.md                     ← Google Colab execution instructions
 │
-├── scripts/
+├── notebooks/                         ← JUPYTER NOTEBOOKS FOR GOOGLE COLAB
+│   ├── README.md                      Quick start guide for Colab notebooks
+│   ├── 02_market_matching.ipynb       Phase 2: Semantic event matching
+│   ├── 03_full_data_collection.ipynb  Phase 3: Multi-threaded trade collection
+│   ├── 04_feature_engineering_dbscan.ipynb     Phase 4: Feature engineering + clustering
+│   ├── 05_network_wisdom_score.ipynb  Phase 5: Network analysis + Wisdom Score
+│   ├── 06_cross_platform_comparison.ipynb      Phase 6: Cross-platform comparison
+│   └── 07_visualization_polish.ipynb  Phase 7: Visualizations + report generation
+│
+├── scripts/                           ← PYTHON SCRIPTS (local execution)
 │   ├── 02_market_matching.py          Phase 2: Event-level semantic matching
 │   ├── 03_full_data_collection.py     Phase 3: Multi-threaded API collection
 │   ├── 04_feature_engineering_dbscan_robust.py    Phase 4: Clustering with checkpoints
@@ -146,7 +156,30 @@ Result: **62.1 / 100 (MODERATE)**
 
 ## 🛠️ Running the Analysis
 
-### Prerequisites
+### 🚀 Option 1: Google Colab
+
+**Zero setup required** — just upload notebooks and run!
+
+1. Go to [Google Colab](https://colab.research.google.com/)
+2. File → Open notebook → Upload tab
+3. Select any notebook from `notebooks/` folder
+4. Run cells in order (Shift + Enter)
+
+**Advantages:**
+- ✅ No local dependencies needed
+- ✅ Interactive cell execution with inline outputs
+- ✅ Free 12-hour runtime
+- ✅ Can save results to Google Drive
+- ✅ Best for sharing and collaboration
+
+See [notebooks/README.md](notebooks/README.md) for complete Colab guide.
+
+---
+
+### 💻 Option 2: Local Execution
+**Full control** — run all phases locally with Python.
+
+#### Prerequisites
 ```bash
 # Using Poetry
 poetry install
@@ -162,26 +195,35 @@ matplotlib>=3.7
 seaborn>=0.13
 ```
 
-### Execute Pipeline
+#### Execute Pipeline
 ```bash
-# Phase 2: Market Matching
+# Phase 2: Market Matching (~5 min)
 poetry run python scripts/02_market_matching.py
 
-# Phase 3: Data Collection
+# Phase 3: Data Collection (~15 min)
 poetry run python scripts/03_full_data_collection.py
 
-# Phase 4: Clustering (60 minutes)
+# Phase 4: Clustering (~60 min) ⚠️ longest
 poetry run python scripts/04_feature_engineering_dbscan_robust.py
 
-# Phase 5: Network & Wisdom Score
+# Phase 5: Network & Wisdom Score (~5 min)
 poetry run python scripts/05_network_wisdom_score.py
 
-# Phase 6: Cross-Platform Comparison
+# Phase 6: Cross-Platform Comparison (~2 min)
 poetry run python scripts/06_cross_platform_comparison.py
 
-# Phase 7: Visualization
+# Phase 7: Visualization (~3 min)
 poetry run python scripts/07_visualization_polish.py
 ```
+
+**Total runtime**: ~90 minutes (Phase 4 takes ~60 min)
+
+**Advantages:**
+
+- ✅ Full control over execution
+- ✅ Can modify code for custom analysis
+- ✅ Intermediate checkpoints saved (Phase 4)
+- ✅ Best for deep customization
 
 ## 🎨 Visualizations
 
