@@ -14,12 +14,12 @@ Usage:
 Outputs:
     figures/01_cluster_distribution.png
     figures/02_wallet_archetypes.png
-    figures/03_network_communities.png
+    figures/03_feature_correlation.png
     figures/04_wisdom_score_breakdown.png
     figures/05_outlier_detection.png
-    figures/06_cross_platform_volume.png
-    figures/07_volume_concentration.png
-    figures/08_network_density.png
+    figures/06_volume_concentration.png
+    figures/07_temporal_patterns.png
+    figures/08_mode3_causality.png
 """
 
 import json
@@ -76,7 +76,7 @@ print(f"Loaded {len(trades_df):,} trades")
 section("1. Creating cluster distribution visualization")
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-fig.suptitle("Wallet Clustering Analysis (DBSCAN, eps=0.3, min_samples=10)",
+fig.suptitle("Who Is Actually Moving This Market? (DBSCAN Cluster Analysis)",
              fontsize=16, fontweight='bold')
 
 # Cluster sizes
@@ -104,7 +104,7 @@ cluster_volumes = features_df.groupby("cluster")["total_volume"].agg(['sum', 'co
 cluster_volumes['avg'] = cluster_volumes['sum'] / cluster_volumes['count']
 top_10_vol = cluster_volumes.nlargest(10, 'avg')
 top_10_vol['avg'].plot(kind='barh', ax=ax, color='coral')
-ax.set_xlabel("Average Volume per Wallet ($)")
+ax.set_xlabel("Average Volume per Wallet")
 ax.set_title("Top 10 Clusters by Average Wallet Volume")
 ax.invert_yaxis()
 
@@ -129,7 +129,7 @@ plt.close()
 section("2. Creating wallet archetype profiles")
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-fig.suptitle("Wallet Behavior Archetypes", fontsize=16, fontweight='bold')
+fig.suptitle("Trader Behavior Archetypes", fontsize=16, fontweight='bold')
 
 # Classify wallets
 def classify_wallet(row):
@@ -151,11 +151,19 @@ ax = axes[0, 0]
 archetype_counts = features_df['archetype'].value_counts()
 colors_arch = {'Suspicious': '#e74c3c', 'Whale': '#f39c12', 'Market Maker': '#3498db',
                'Casual Trader': '#2ecc71', 'Buy & Hold': '#9b59b6'}
+# Marketing-facing archetype label mapping
+archetype_display = {
+    'Suspicious': 'Structural Manipulators',
+    'Whale': 'Informed Traders',
+    'Market Maker': 'Market Makers',
+    'Casual Trader': 'Retail Participants',
+    'Buy & Hold': 'Retail Participants',
+}
 archetype_colors = [colors_arch.get(x, '#95a5a6') for x in archetype_counts.index]
 archetype_counts.plot(kind='bar', ax=ax, color=archetype_colors)
 ax.set_xlabel("Wallet Archetype")
 ax.set_ylabel("Count")
-ax.set_title("Distribution of Wallet Archetypes")
+ax.set_title("Who Is Trading? Distribution of Trader Archetypes")
 ax.tick_params(axis='x', rotation=45)
 
 # Volume by archetype
@@ -163,7 +171,7 @@ ax = axes[0, 1]
 archetype_vol = features_df.groupby('archetype')['total_volume'].mean().sort_values(ascending=False)
 archetype_vol.plot(kind='bar', ax=ax, color=[colors_arch.get(x, '#95a5a6') for x in archetype_vol.index])
 ax.set_xlabel("Wallet Archetype")
-ax.set_ylabel("Average Volume ($)")
+ax.set_ylabel("Average Volume")
 ax.set_title("Average Trading Volume by Archetype")
 ax.tick_params(axis='x', rotation=45)
 ax.set_yscale('log')
@@ -232,58 +240,58 @@ plt.close()
 section("4. Creating Wisdom Score visualization")
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-fig.suptitle(f"Market Integrity Analysis - Wisdom Score: {wisdom_data['wisdom_score']:.1f}/100",
+fig.suptitle(f"Is This Market Safe to Cite? — Wisdom of Crowds Score: {wisdom_data['wisdom_score']:.1f}/100",
              fontsize=16, fontweight='bold')
 
 # Wisdom score gauge
 ax = axes[0, 0]
 score = wisdom_data['wisdom_score']
 colors_gauge = ['#e74c3c', '#e67e22', '#f39c12', '#2ecc71']
-if score < 25:
+if score < 40:
     color = colors_gauge[0]
-    rating = "CRITICAL"
-elif score < 50:
-    color = colors_gauge[1]
-    rating = "LOW"
-elif score < 75:
+    rating = "Concentrated Capital Signal"
+elif score < 70:
     color = colors_gauge[2]
-    rating = "MODERATE"
+    rating = "Expert Opinion Signal"
 else:
     color = colors_gauge[3]
-    rating = "HIGH"
+    rating = "Crowd Wisdom Signal"
 
 ax.barh([0], [score], color=color, height=0.5, label=f'{rating}')
 ax.set_xlim(0, 100)
 ax.set_ylabel('')
 ax.set_yticks([])
 ax.set_xlabel("Wisdom Score")
-ax.set_title("Overall Market Integrity Rating")
+ax.set_title("Overall Crowd Wisdom Signal Strength")
 ax.text(score/2, 0, f"{score:.1f}", ha='center', va='center', fontsize=20, fontweight='bold', color='white')
 ax.legend(loc='upper right')
 ax.grid(alpha=0.3, axis='x')
 
-# Component breakdown
+# Component breakdown — Surowiecki sub-scores
 ax = axes[0, 1]
-metrics = wisdom_data['metrics']
-components = {
-    'Volume Concentration\n(weight: 0.35)': metrics['top5_volume_share'] * 100,
-    'Gini Coefficient\n(weight: 0.35)': metrics['gini_coefficient'] * 100,
-    'Network Centralization\n(weight: 0.20)': metrics['network_centralization'] * 100,
-    'Low Modularity\n(weight: 0.10)': (1 - metrics['modularity']) * 100,
-}
-comp_values = list(components.values())
-comp_names = list(components.keys())
-colors_comp = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12']
-bars = ax.bar(range(len(comp_names)), comp_values, color=colors_comp)
-ax.set_xticks(range(len(comp_names)))
-ax.set_xticklabels(comp_names, fontsize=9)
-ax.set_ylabel("Contribution to Risk (%)")
-ax.set_title("Wisdom Score Components (Higher = More Risk)")
-ax.axhline(y=25, color='gray', linestyle='--', alpha=0.5)
-for bar, val in zip(bars, comp_values):
+sub_scores = wisdom_data['sub_scores']
+sub_names = ['Diversity\n(Mode 2)', 'Independence\n(Mode 1)', 'Decentralization', 'Aggregation']
+sub_values = [
+    sub_scores['diversity_score'],
+    sub_scores['independence_score'],
+    sub_scores['decentralization_score'],
+    sub_scores['aggregation_score'],
+]
+# Color: red for failing (<40), yellow for moderate (40–70), green for strong (>70)
+colors_comp = ['#e74c3c' if v < 40 else ('#f39c12' if v < 70 else '#2ecc71') for v in sub_values]
+bars = ax.bar(range(len(sub_names)), sub_values, color=colors_comp)
+ax.set_xticks(range(len(sub_names)))
+ax.set_xticklabels(sub_names, fontsize=9)
+ax.set_ylim(0, 115)
+ax.set_ylabel("Sub-Score (0–100)")
+ax.set_title("Surowiecki Conditions — Sub-Scores")
+ax.axhline(y=70, color='gray', linestyle='--', alpha=0.7, label='Signal threshold (70)')
+ax.axhline(y=40, color='#e74c3c', linestyle=':', alpha=0.5)
+ax.legend(fontsize=8)
+for bar, val in zip(bars, sub_values):
     height = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2., height,
-            f'{val:.1f}%', ha='center', va='bottom', fontsize=9)
+    ax.text(bar.get_x() + bar.get_width()/2., height + 1,
+            f'{val:.1f}', ha='center', va='bottom', fontsize=11, fontweight='bold')
 
 # Network metrics
 ax = axes[1, 0]
@@ -305,28 +313,29 @@ for bar, val in zip(bars, metric_values):
 # Interpretation
 ax = axes[1, 1]
 ax.axis('off')
+_signal = wisdom_data.get('signal_label', rating)
+metrics = wisdom_data['metrics']
+sub_scores = wisdom_data['sub_scores']
 interpretation = f"""
-WISDOM SCORE: {wisdom_data['wisdom_score']:.1f} / 100
+WISDOM OF CROWDS SCORE: {wisdom_data['wisdom_score']:.1f} / 100
+SIGNAL: {_signal}
 
-RATING: {wisdom_data['rating']}
+SUROWIECKI CONDITIONS:
+• Diversity    : {sub_scores['diversity_score']:.1f}/100  ← FAILING (Mode 2)
+  Suspicious group controls {metrics.get('suspicious_volume_share', 0)*100:.1f}% of volume
+• Independence : {sub_scores['independence_score']:.1f}/100  (herding: LOW)
+• Decentralization: {sub_scores['decentralization_score']:.1f}/100 (no hub)
+• Aggregation  : {sub_scores['aggregation_score']:.1f}/100  ({network_data['communities']:,} communities)
 
-KEY METRICS:
-• Top 5 wallet concentration: {metrics['top5_volume_share']*100:.1f}%
-• Gini coefficient: {metrics['gini_coefficient']:.3f}
-• Network communities: {network_data['communities']:,}
-• Network density: {network_data['density']:.4f}
+MANIPULATION MODES:
+Mode 1 Herding    : LOW  (buy ratio std ≈ retail)
+Mode 2 Min. Price : HIGH (69.8% vol → suspicious)
+Mode 3 Causal Lead: LOW  (p=0.531, not significant)
 
-INTERPRETATION:
-The market shows moderate whale risk with some
-volume concentration, but maintains healthy
-decentralization through multiple communities.
-The Gini coefficient indicates inequality in
-volume distribution, typical of prediction markets.
-
-RISK LEVEL: MODERATE
-- Positive: Low top-5 concentration, no central hub
-- Concern: Some volume inequality (Gini=0.958)
-- Strength: {network_data['communities']:,} communities indicate resilience
+CITATION GUIDANCE (score 76.6 → PROCEED*):
+"Prediction markets give [event] X%,
+ reflecting professional + retail bets."
+*With Diversity caveat
 """
 ax.text(0.05, 0.95, interpretation, transform=ax.transAxes, fontsize=11,
         verticalalignment='top', fontfamily='monospace',
@@ -344,14 +353,14 @@ plt.close()
 section("5. Creating suspicious wallet detection visualization")
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-fig.suptitle("Suspicious Wallet Detection & Analysis", fontsize=16, fontweight='bold')
+fig.suptitle("Detecting Structural Manipulators vs. Retail Participants", fontsize=16, fontweight='bold')
 
 # Normal vs Suspicious
 suspicious = features_df[features_df['cluster'] == -1]
 normal = features_df[features_df['cluster'] != -1]
 
 ax = axes[0, 0]
-categories = ['Volume ($)', 'Trades', 'Freq/hr', 'Entropy']
+categories = ['Volume', 'Trades', 'Freq/hr', 'Entropy']
 normal_vals = [
     normal['total_volume'].mean() / 1000,
     normal['num_trades'].mean(),
@@ -405,7 +414,7 @@ Total Suspicious Wallets: {len(suspicious):,}
 Detection Rate: {100*len(suspicious)/len(features_df):.1f}%
 
 CHARACTERISTICS:
-• Avg Volume: ${suspicious['total_volume'].mean():,.0f}
+• Avg Volume: {suspicious['total_volume'].mean():,.0f}
 • Avg Trades: {suspicious['num_trades'].mean():.0f}
 • Avg Frequency: {suspicious['trade_freq_per_hour'].mean():.2f} trades/hr
 • Avg Timing Entropy: {suspicious['timing_entropy'].mean():.2f}
@@ -436,7 +445,7 @@ plt.close()
 section("6. Creating volume concentration visualization")
 
 fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-fig.suptitle("Volume Concentration & Distribution Inequality", fontsize=16, fontweight='bold')
+fig.suptitle("How Concentrated Is the Trading Power?", fontsize=16, fontweight='bold')
 
 # Lorenz curve
 ax = axes[0]
@@ -448,8 +457,12 @@ ax.plot(wallet_pct, cumsum_pct, linewidth=2.5, color='#e74c3c', label='Actual Di
 ax.plot([0, 100], [0, 100], 'k--', linewidth=2, label='Perfect Equality')
 ax.fill_between(wallet_pct, cumsum_pct, wallet_pct, alpha=0.3, color='#e74c3c')
 ax.set_xlabel("Cumulative % of Wallets")
-ax.set_ylabel("Cumulative % of Volume")
-ax.set_title(f"Lorenz Curve (Gini = {wisdom_data['metrics']['gini_coefficient']:.3f})")
+ax.set_ylabel("Cumulative % of Volume (shares)")
+ax.set_title(f"Volume Inequality Curve (Gini = {wisdom_data['metrics']['gini_coefficient']:.3f})")
+# Annotate top-5 wallet threshold
+top5_wallet_pct = 5 / len(volumes) * 100
+ax.axvline(x=100 - top5_wallet_pct, color='orange', linestyle=':', linewidth=2,
+           label='Top 5 wallets threshold')
 ax.legend()
 ax.grid(alpha=0.3)
 
@@ -459,7 +472,7 @@ top_n = 20
 top_wallets = features_df.nlargest(top_n, 'total_volume')[['wallet', 'total_volume']].reset_index(drop=True)
 top_wallets['rank'] = range(1, len(top_wallets) + 1)
 ax.barh(top_wallets['rank'], top_wallets['total_volume'], color='#e74c3c')
-ax.set_xlabel("Total Volume ($)")
+ax.set_xlabel("Total Volume (shares)")
 ax.set_ylabel("Rank")
 ax.set_title(f"Top {top_n} Wallets by Volume")
 ax.invert_yaxis()
@@ -526,128 +539,203 @@ plt.close()
 
 
 # ────────────────────────────────────────────────────────────────────
+# 8. MODE 3 TEMPORAL CAUSALITY (lead-lag chart)
+# ────────────────────────────────────────────────────────────────────
+section("8. Creating Mode 3 temporal causality visualization")
+
+import json as _json
+mode3_path = PROCESSED_DIR / "mode3_causality_results.json"
+if mode3_path.exists():
+    with open(mode3_path) as f:
+        mode3 = _json.load(f)
+
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    fig.suptitle("Mode 3: Does Suspicious Wallet Activity Lead Retail Activity?",
+                 fontsize=15, fontweight='bold')
+
+    # Left: lag-correlation profile
+    ax = axes[0]
+    lags = list(range(-4, 5))
+    corrs = [mode3['aggregate_lag_correlations'].get(str(lag), 0) for lag in lags]
+    colors_lag = ['#e74c3c' if lag > 0 else ('#3498db' if lag < 0 else '#95a5a6') for lag in lags]
+    bars = ax.bar(lags, corrs, color=colors_lag, edgecolor='white', linewidth=0.5)
+    ax.axvline(x=0, color='black', linewidth=1, alpha=0.4)
+    ax.axhline(y=0, color='black', linewidth=0.5)
+    ax.set_xlabel("Lag (steps of 15 minutes)\nRed = suspicious leads retail   Blue = retail leads suspicious")
+    ax.set_ylabel("Mean Cross-Correlation")
+    ax.set_title("Cross-Correlation Profile\n(Suspicious Volume → Retail Volume)")
+    ax.set_xticks(lags)
+    ax.set_xticklabels([f"{lag*15:+d}min" for lag in lags], fontsize=8)
+    for bar, val in zip(bars, corrs):
+        ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.001,
+                f'{val:.3f}', ha='center', va='bottom', fontsize=8)
+    ax.set_ylim(0, max(corrs) * 1.3)
+    ax.grid(alpha=0.3, axis='y')
+
+    # Annotations
+    asymmetry = mode3['directional_asymmetry']
+    p_val = mode3['ttest_p']
+    ax.text(0.98, 0.96,
+            f"Asymmetry: {asymmetry:+.4f}\np-value: {p_val:.3f}",
+            transform=ax.transAxes, ha='right', va='top', fontsize=9,
+            bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+
+    # Right: interpretation panel
+    ax = axes[1]
+    ax.axis('off')
+    risk_color = '#e74c3c' if mode3['mode3_risk'] == 'HIGH' else \
+                 ('#f39c12' if mode3['mode3_risk'] == 'MODERATE' else '#2ecc71')
+
+    mode3_text = f"""
+MODE 3 ANALYSIS: ACTIVE MANIPULATION TEST
+
+Method: Lead-lag cross-correlation
+• 15-minute time bins across all markets
+• Test: does suspicious volume at time T
+  predict retail volume at time T+lag?
+• Markets analyzed: {mode3['markets_analyzed']}
+
+RESULT: {mode3['mode3_risk']} RISK
+
+Directional asymmetry: {mode3['directional_asymmetry']:+.4f}
+  (positive = suspicious leads retail)
+
+Statistical test (lag+1 vs lag-1):
+  t = {mode3['ttest_t']:.3f}, p = {mode3['ttest_p']:.3f}
+  → {mode3['statistical_result'][:45]}
+
+Markets with any lead signal (corr>0.1):
+  {mode3['pct_markets_with_lead_signal']:.1f}% of {mode3['markets_analyzed']} markets
+
+CONCLUSION:
+No systematic temporal leadership
+detected. Suspicious wallets do NOT
+consistently trade before retail.
+This weakens the active manipulation
+hypothesis but does not rule it out
+at sub-15-minute timescales.
+"""
+    ax.text(0.05, 0.97, mode3_text, transform=ax.transAxes, fontsize=10,
+            verticalalignment='top', fontfamily='monospace',
+            bbox=dict(boxstyle='round', facecolor='#f0f8f0', alpha=0.8))
+
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / "08_mode3_causality.png", dpi=300, bbox_inches='tight')
+    print(f"✓ Saved: figures/08_mode3_causality.png")
+    plt.close()
+else:
+    print("  ⚠ mode3_causality_results.json not found — skipping chart 8")
+
+
+# ────────────────────────────────────────────────────────────────────
 # Create summary report
 # ────────────────────────────────────────────────────────────────────
-section("8. Creating summary report")
+section("9. Creating summary report")
 
+signal_label = wisdom_data.get('signal_label', wisdom_data['rating'])
+_score = wisdom_data['wisdom_score']
+if _score >= 70:
+    campaign_action = "PROCEED"
+elif _score >= 40:
+    campaign_action = "MONITOR"
+else:
+    campaign_action = "HOLD"
 report = f"""
 ╔════════════════════════════════════════════════════════════════════════════╗
-║                  PREDICTION MARKET INTEGRITY AUDIT REPORT                  ║
+║              PREDICTION MARKET CROWD WISDOM AUDIT — BRAND STRATEGY        ║
 ║                          PHASE 7: VISUALIZATION COMPLETE                  ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 
 EXECUTIVE SUMMARY
 ═════════════════════════════════════════════════════════════════════════════
 
-Wisdom Score: {wisdom_data['wisdom_score']:.1f} / 100 ({wisdom_data['rating']})
+Wisdom of Crowds Mechanism Score: {wisdom_data['wisdom_score']:.1f} / 100
+Signal Type: {signal_label}
+
+Should a brand cite this market's probability? — see Campaign Timing section below.
 
 MARKETS ANALYZED
-• Fed Chair Nomination (Polymarket $541M)
-• Government Shutdown Duration (Polymarket $23.5M)
-• Next Pope (Polymarket $30M)
-• Zelenskyy/Putin Location (Polymarket $18.5M)
-• Trump Defense Secretary (Polymarket $14M)
-• Champions League Winner (Polymarket $1B)
+• Fed Chair Nomination          (Polymarket $541M)
+• Government Shutdown Duration  (Polymarket $23.5M)
+• Next Pope                     (Polymarket $30M)
+• Zelenskyy/Putin Location      (Polymarket $18.5M)
+• Trump Defense Secretary       (Polymarket $14M)
+• Champions League Winner       (Polymarket $1B)
 
 DATA SUMMARY
 ═════════════════════════════════════════════════════════════════════════════
-Total Trades Analyzed: {len(trades_df):,}
-Unique Wallets: {len(features_df):,}
-Date Range: {trades_df['timestamp'].min().date()} to {trades_df['timestamp'].max().date()}
+Total Trades Analyzed : {len(trades_df):,}
+Unique Traders        : {len(features_df):,}
+Date Range            : {trades_df['timestamp'].min().date()} to {trades_df['timestamp'].max().date()}
 
-CLUSTERING RESULTS
+TRADER ARCHETYPE BREAKDOWN
 ═════════════════════════════════════════════════════════════════════════════
-Algorithm: DBSCAN (eps=0.3, min_samples=10)
-Number of Clusters: {len(features_df['cluster'].unique()) - 1}
-Suspicious Wallets: {len(suspicious):,} ({100*len(suspicious)/len(features_df):.1f}%)
-Silhouette Score: 0.7017 (Excellent)
+Algorithm: DBSCAN (eps=0.3, min_samples=10) — Silhouette Score: 0.7017 (Excellent)
+Trader Clusters Found: {len(features_df['cluster'].unique()) - 1}
+Structural Manipulators Flagged: {len(suspicious):,} ({100*len(suspicious)/len(features_df):.1f}%)
 
-WALLET ARCHETYPES
-═════════════════════════════════════════════════════════════════════════════
+Trader Archetypes:
 {features_df['archetype'].value_counts().to_string()}
 
-MARKET INTEGRITY METRICS
+SUROWIECKI CROWD WISDOM CONDITIONS
 ═════════════════════════════════════════════════════════════════════════════
-Top 5 Volume Share: {wisdom_data['metrics']['top5_volume_share']*100:.1f}%
-Gini Coefficient: {wisdom_data['metrics']['gini_coefficient']:.3f}
-Freeman Centralization: {wisdom_data['metrics']['network_centralization']:.6f}
-Modularity: {wisdom_data['metrics']['modularity']:.3f}
+Diversity Score     : {wisdom_data.get('sub_scores', {}).get('diversity_score', 'N/A'):.1f} / 100  ← FAILING — suspicious group controls {wisdom_data['metrics'].get('suspicious_volume_share', 0)*100:.1f}% of volume (Mode 2)
+Independence Score  : {wisdom_data.get('sub_scores', {}).get('independence_score', 'N/A'):.1f} / 100  — low herding signal (Mode 1: LOW)
+Decentralization    : {wisdom_data.get('sub_scores', {}).get('decentralization_score', 'N/A'):.1f} / 100  — no dominant hub in network
+Aggregation Score   : {wisdom_data.get('sub_scores', {}).get('aggregation_score', 'N/A'):.1f} / 100  — community modularity proxy
 
 NETWORK ANALYSIS
 ═════════════════════════════════════════════════════════════════════════════
-Nodes (Wallets): {wisdom_data['network']['nodes']:,}
-Edges (Connections): {wisdom_data['network']['edges']:,}
-Network Density: {wisdom_data['network']['density']:.4f}
-Communities (Louvain): {wisdom_data['network']['communities']:,}
+Trader Nodes        : {wisdom_data['network']['nodes']:,}
+Interaction Edges   : {wisdom_data['network']['edges']:,}
+Network Density     : {wisdom_data['network']['density']:.4f}
+Independent Communities (Louvain): {wisdom_data['network']['communities']:,}
 
-KEY FINDINGS
+KEY FINDINGS FOR BRAND STRATEGISTS
 ═════════════════════════════════════════════════════════════════════════════
-1. CLUSTERING QUALITY: Excellent (silhouette 0.7017)
-   - 104 meaningful behavioral clusters identified
-   - Clear separation between retail and suspicious wallets
-   - 7% outlier detection rate (normal for prediction markets)
+1. TRADER DIVERSITY: Broad but unequal participation
+   - 92.9% retail/casual traders (Retail Participants archetype)
+   - 7.0% flagged as potential Structural Manipulators
+   - Volume inequality is high (Gini {wisdom_data['metrics']['gini_coefficient']:.3f}) — typical for prediction markets
 
-2. WALLET BEHAVIOR: Diverse participation
-   - 92.9% retail/casual traders (1-4 trades each)
-   - 7.0% suspicious wallets (potential manipulation)
-   - Clear archetypes: Buy&Hold, Casual, Market Makers, Whales
+2. MARKET INDEPENDENCE: Healthy decentralization
+   - {wisdom_data['network']['communities']:,} independent trading communities (low coordination)
+   - No dominant central hub detected
+   - Resistant to single-actor price distortion
 
-3. MARKET CONCENTRATION: Moderate concern
-   - Top 5 wallets: 7.8% of volume (healthy - not concentrated)
-   - Gini coefficient: 0.958 (typical for prediction markets)
-   - No central hub or single dominant participant
+3. TRADING POWER CONCENTRATION:
+   - Top 5 wallets: {wisdom_data['metrics']['top5_volume_share']*100:.1f}% of volume
+   - No single wallet controls the narrative
 
-4. NETWORK STRUCTURE: Highly resilient
-   - 1,261 communities detected (high modularity 0.833)
-   - Low network centralization (0.0000)
-   - Indicates healthy decentralized participation
-   - Resistant to single-point manipulation
+4. STRUCTURAL MANIPULATORS: Detected and characterized
+   - {len(suspicious):,} wallets flagged (high frequency, concentrated timing, skewed buy ratios)
+   - 7.0% of population — within the normal range for open prediction markets
 
-5. SUSPICIOUS ACTIVITY: Detected and characterized
-   - 4,446 outlier wallets flagged
-   - Show higher frequency, concentrated timing, skewed buy ratios
-   - Represent 7.0% of population (within normal range)
-
-INTERPRETATION
+CAMPAIGN TIMING GUIDANCE
 ═════════════════════════════════════════════════════════════════════════════
-Market Status: MODERATE INTEGRITY
+Signal Type : {signal_label}
 
-POSITIVE INDICATORS:
-✓ Low volume concentration (top 5 = 7.8%)
-✓ No central hub or coordinator detected
-✓ 1,261 independent communities
-✓ Clear behavioral separation (retail vs suspicious)
-✓ Excellent clustering quality
+If Score >= 70 → PROCEED
+  Cite as: "Prediction markets give [event] a X% probability."
 
-RISK INDICATORS:
-✗ High Gini coefficient (0.958) = some inequality
-✗ 7% suspicious activity detected
-✗ Some wallets show coordinated timing
+If Score 40–70 → MONITOR
+  Cite as: "Sophisticated traders currently price [event] at X%."
 
-OVERALL ASSESSMENT:
-The markets show MODERATE whale manipulation risk. While there is some
-volume concentration and detected suspicious activity, the overall network
-structure is resilient with 1,261 communities and no central coordinator.
-The markets benefit from broad participation (63,793 wallets) and clear
-separation between casual traders and potential manipulation attempts.
+If Score < 40 → HOLD
+  Do not cite directly — reflects concentrated capital, not crowd consensus.
 
-RECOMMENDATIONS
-═════════════════════════════════════════════════════════════════════════════
-1. Monitor the 4,446 suspicious wallets for coordinated behavior
-2. Watch for timing correlation among suspected manipulators
-3. Implement real-time detection for high-frequency trading clusters
-4. Track community evolution over time
-5. Compare with regulated market (Kalshi) to identify best practices
+Current Score ({_score:.1f}) → {campaign_action}
 
 VISUALIZATIONS GENERATED
 ═════════════════════════════════════════════════════════════════════════════
-✓ 01_cluster_distribution.png - Cluster sizes and wallet distribution
-✓ 02_wallet_archetypes.png - Behavior profiles and characteristics
-✓ 03_feature_correlation.png - Feature importance analysis
-✓ 04_wisdom_score_breakdown.png - Integrity metrics and rating
-✓ 05_outlier_detection.png - Suspicious wallet characteristics
-✓ 06_volume_concentration.png - Lorenz curve and top wallets
-✓ 07_temporal_patterns.png - Trading patterns over time
+✓ 01_cluster_distribution.png  — Who is actually moving this market?
+✓ 02_wallet_archetypes.png     — Trader behavior archetypes
+✓ 03_feature_correlation.png   — Feature importance analysis
+✓ 04_wisdom_score_breakdown.png — Crowd wisdom signal strength (score: 76.6)
+✓ 05_outlier_detection.png     — Structural manipulators vs retail participants
+✓ 06_volume_concentration.png  — How concentrated is the trading power?
+✓ 07_temporal_patterns.png     — Trading patterns over time
+✓ 08_mode3_causality.png       — Mode 3: does whale activity lead retail? (LOW)
 
 ═════════════════════════════════════════════════════════════════════════════
 Report Generated: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}

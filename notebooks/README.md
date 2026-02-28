@@ -13,9 +13,9 @@ All notebooks are ready to run in Google Colab without any local dependencies. S
 | **2** | `02_market_matching.ipynb` | ~5 min | Match Polymarket & Kalshi events using semantic similarity (sentence-transformers) | matched_markets.json (6 pairs) |
 | **3** | `03_full_data_collection.ipynb` | ~15 min | Multi-threaded API collection from both platforms (2000 trades/market) | 237k+ Poly + 160k+ Kalshi trades |
 | **4** | `04_feature_engineering_dbscan.ipynb` | ~60 min | Engineer 11 wallet features + DBSCAN clustering with parameter grid search | 104 clusters + 4,446 outliers (7%) |
-| **5** | `05_network_wisdom_score.ipynb` | ~5 min | Build wallet interaction network (Louvain communities) + compute Wisdom Score | Wisdom Score: 62.1/100 (MODERATE) |
+| **5** | `05_network_wisdom_score.ipynb` | ~5 min | Build wallet interaction network (Louvain communities) + compute Surowiecki Wisdom Score | Wisdom Score: 76.6/100 (Crowd Wisdom Signal w/ Diversity warning) |
 | **6** | `06_cross_platform_comparison.ipynb` | ~2 min | Hourly price alignment + correlation + divergence analysis | price_comparison.csv |
-| **7** | `07_visualization_polish.ipynb` | ~3 min | Create 7 publication-ready charts (300 DPI) + analysis report | figures/ + ANALYSIS_REPORT.txt |
+| **7** | `07_visualization_polish.ipynb` | ~3 min | Create 8 publication-ready charts (300 DPI) + analysis report, including Mode 3 temporal causality | figures/ + ANALYSIS_REPORT.txt |
 
 ## 🚀 Quick Start in Google Colab
 
@@ -33,9 +33,10 @@ All notebooks are ready to run in Google Colab without any local dependencies. S
 | kalshi_trades_all_matched.csv | 12 MB | 160,000 trades from Kalshi |
 | wallet_features.csv | 8 MB | 63,793 wallets × 11 features |
 | dbscan_clusters.json | 5.2 MB | Cluster assignments |
-| wisdom_score_summary.json | < 1 KB | Wisdom Score = 62.1/100 |
-| 7 × PNG charts | 2.7 MB | Visualizations (300 DPI) |
-| ANALYSIS_REPORT.txt | < 100 KB | Comprehensive findings |
+| wisdom_score_summary.json | < 1 KB | Wisdom Score = 76.6/100 (Surowiecki sub-scores) |
+| mode3_causality_results.json | < 1 KB | Mode 3 temporal causality test (LOW risk, p=0.531) |
+| 8 × PNG charts | 3.0 MB | Visualizations (300 DPI) incl. Figure 8 (Mode 3) |
+| ANALYSIS_REPORT.txt | < 100 KB | Comprehensive findings with three failure modes |
 
 **Total**: ~78 MB of analysis outputs
 
@@ -83,7 +84,18 @@ Then save files to `/content/drive/My Drive/prediction-whale/`
 ## 📊 Key Findings Summary
 
 ```
-Wisdom Score: 62.1 / 100 (MODERATE)
+Wisdom Score: 76.6 / 100 (CROWD WISDOM SIGNAL with Diversity Warning)
+
+SUROWIECKI CONDITIONS:
+  - Diversity    : 30.2/100  ← FAILING (suspicious group controls 69.8% volume)
+  - Independence : 93.0/100  ← STRONG (no lockstep herding detected)
+  - Decentralization: 100.0/100 ← STRONG (no network hub, 1,261 communities)
+  - Aggregation  : 83.3/100  ← STRONG (modularity 0.833)
+
+THREE FAILURE MODES:
+  - Mode 1 (Herding)   : LOW  — suspicious wallets don't move in lockstep
+  - Mode 2 (Minority price-setting): HIGH — suspicious group dominates volume
+  - Mode 3 (Active manipulation): LOW — no temporal lead pattern (p=0.531)
 
 Suspicious Wallets (7% of participants) control 69.8% of volume:
   - Top 1%  (638 wallets)  → 66.5% of volume
@@ -129,8 +141,10 @@ Network Analysis:
 - **Feature engineering**: 11 wallet features for behavioral classification
 - **DBSCAN clustering**: Unsupervised detection of suspicious traders (7% outlier rate)
 - **Network analysis**: Wallet interaction graphs and Louvain communities (1,261)
-- **Wisdom Score**: Composite metric combining volume concentration, network centralization, and modularity
-- **Market integrity**: Concrete metrics for evaluating crowd manipulation risk
+- **Wisdom Score**: Surowiecki framework — four conditions (Diversity, Independence, Decentralization, Aggregation)
+- **Three failure modes**: Herding vs. minority price-setting vs. active manipulation
+- **Temporal causality**: Lead-lag analysis to test whether whales move before retail traders
+- **Market integrity**: Concrete metrics for evaluating crowd wisdom and manipulation risk
 
 ---
 

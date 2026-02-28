@@ -1,11 +1,21 @@
 {
-  "wisdom_score": 62.05827578143159,
-  "rating": "MODERATE - Some concentration but diversified participation",
+  "wisdom_score": 76.63529988841776,
+  "signal_label": "Crowd Wisdom Signal",
+  "rating": "Crowd Wisdom Signal",
+  "sub_scores": {
+    "diversity_score": 30.223270173339678,
+    "independence_score": 93.03058329283778,
+    "decentralization_score": 99.99975325911358,
+    "aggregation_score": 83.28759282838001
+  },
   "metrics": {
     "top5_volume_share": 0.07785690261464642,
+    "top10_volume_share": 0.11953782889448632,
+    "suspicious_volume_share": 0.6977672982666032,
     "gini_coefficient": 0.958441216049043,
     "network_centralization": 2.4674088642705904e-06,
-    "modularity": 0.8328759282838002
+    "modularity": 0.8328759282838002,
+    "outlier_rate": 0.06969416707162228
   },
   "network": {
     "nodes": 63793,

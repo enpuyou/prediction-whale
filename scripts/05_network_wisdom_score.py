@@ -92,7 +92,7 @@ section("3. Computing network metrics")
 wallet_volumes = df.groupby("proxyWallet")["size"].sum()
 top5_share = wallet_volumes.nlargest(5).sum() / wallet_volumes.sum()
 gini = gini_coefficient(wallet_volumes.values)
-print(f"\nVolume concentration:")
+print("\nVolume concentration:")
 print(f"  Top 5 wallets share: {top5_share:.1%}")
 print(f"  Gini coefficient: {gini:.3f}")
 
@@ -105,7 +105,7 @@ if G.number_of_nodes() > 0:
         if len(G) > 1
         else 0
     )
-    print(f"\nNetwork centralization:")
+    print("\nNetwork centralization:")
     print(f"  Max degree centrality: {max_dc:.4f}")
     print(f"  Freeman centralization: {centralization:.4f}")
 else:
@@ -116,11 +116,11 @@ if G.number_of_edges() > 0:
     try:
         communities = list(nx.community.louvain_communities(G, weight="weight", seed=42))
         modularity = nx.community.modularity(G, communities, weight="weight")
-        print(f"\nCommunity structure:")
+        print("\nCommunity structure:")
         print(f"  Communities: {len(communities)}")
         print(f"  Modularity: {modularity:.4f}")
         print(f"  Community sizes: {sorted([len(c) for c in communities], reverse=True)[:5]}")
-    except:
+    except Exception:
         communities = []
         modularity = 0
         print("  Could not compute communities (insufficient network connectivity)")
@@ -142,42 +142,81 @@ if communities:
               f"{cluster_overlap:.1%} in DBSCAN cluster {most_common_cluster}")
 
 
-# ── 5. Compute composite Wisdom Score ────────────────────────────────
-section("5. Computing Wisdom Score")
+# ── 5. Compute Wisdom of Crowds Mechanism Score ───────────────────────
+section("5. Computing Wisdom of Crowds Mechanism Score")
 
-# Wisdom Score formula (0 = whale manipulation, 100 = true crowd)
-# Lower concentration, lower centralization, higher modularity = higher score
-wisdom_score = 100 * (1 - (
-    0.35 * top5_share +          # Volume concentration (0-1)
-    0.35 * gini +                # Gini coefficient (0-1)
-    0.20 * centralization +      # Network centralization (0-1)
-    0.10 * (1 - modularity)      # Low modularity = coordination (flip it)
-))
+# Surowiecki's four crowd wisdom conditions, each scored 0–100:
+#
+# Diversity Score: fraction of volume NOT controlled by behaviorally-suspicious
+#   wallets (DBSCAN cluster == -1, i.e. outliers/anomalous traders).
+#   Unlike top-N filtering (which conflates size with anomaly), this
+#   asks: "Does the behaviorally-anomalous group dominate price-setting?"
+#   High score = volume spread across many behaviorally-normal traders.
+features_df = pd.read_csv(PROCESSED_DIR / "wallet_features.csv")
+suspicious_wallets = set(
+    features_df.loc[features_df["cluster"] == -1, "wallet"]
+)
+suspicious_volume = wallet_volumes[wallet_volumes.index.isin(suspicious_wallets)].sum()
+total_volume = wallet_volumes.sum()
+suspicious_volume_share = suspicious_volume / total_volume if total_volume > 0 else 0
+top10_share = wallet_volumes.nlargest(10).sum() / total_volume  # kept for reference
+diversity_score = max(0, min(100, (1 - suspicious_volume_share) * 100))
 
-wisdom_score = max(0, min(100, wisdom_score))  # Clamp to [0, 100]
+# Independence Score: inverse of DBSCAN coordination signal
+#   High outlier rate (cluster == -1) = low independence
+outlier_wallets = sum(1 for v in cluster_map.values() if v == -1)
+total_wallets = len(cluster_map)
+outlier_rate = outlier_wallets / total_wallets if total_wallets > 0 else 0
+independence_score = max(0, min(100, (1 - outlier_rate) * 100))
 
-print(f"\nWisdom Score Components:")
-print(f"  Volume concentration (top 5): {top5_share:.1%} (weight: 0.35)")
-print(f"  Gini coefficient: {gini:.3f} (weight: 0.35)")
-print(f"  Network centralization: {centralization:.4f} (weight: 0.20)")
-print(f"  Modularity: {modularity:.3f} (weight: 0.10)")
-print(f"\n  ↓")
-print(f"  WISDOM SCORE: {wisdom_score:.1f} / 100")
+# Decentralization Score: inverse of network centralization
+#   Low Freeman centralization = no dominant hub = high score
+decentralization_score = max(0, min(100, (1 - centralization) * 100))
+
+# Aggregation Score: how well does price track public information?
+#   Approximated by market modularity — high community structure
+#   suggests price emerges from diverse independent groups (placeholder
+#   until Google Trends correlation is available)
+aggregation_score = max(0, min(100, modularity * 100))
+
+# Composite: equally-weighted average of all four
+wisdom_score = (diversity_score + independence_score + decentralization_score + aggregation_score) / 4
+
+print("\nWisdom of Crowds Mechanism Score — Sub-scores:")
+print(f"  Diversity Score     : {diversity_score:.1f} / 100  (volume outside behaviorally-suspicious group; suspicious share = {suspicious_volume_share:.1%})")
+print(f"  Independence Score  : {independence_score:.1f} / 100  (low DBSCAN coordination signal)")
+print(f"  Decentralization    : {decentralization_score:.1f} / 100  (no dominant hub in network)")
+print(f"  Aggregation Score   : {aggregation_score:.1f} / 100  (community modularity proxy)")
+print("\n  ↓")
+print(f"  WISDOM OF CROWDS MECHANISM SCORE: {wisdom_score:.1f} / 100")
 
 
 # ── 6. Interpretation ────────────────────────────────────────────────
 section("6. Interpretation")
 
-if wisdom_score > 75:
-    rating = "HIGH - Strong crowd wisdom, minimal whale manipulation risk"
-elif wisdom_score > 50:
-    rating = "MODERATE - Some concentration but diversified participation"
-elif wisdom_score > 25:
-    rating = "LOW - Significant concentration, whale influence likely"
+if wisdom_score > 70:
+    signal_label = "Crowd Wisdom Signal"
+    signal_description = (
+        "Price reflects the aggregated beliefs of a diverse, independent group. "
+        "Safe to cite as crowd consensus."
+    )
+elif wisdom_score >= 40:
+    signal_label = "Expert Opinion Signal"
+    signal_description = (
+        "Price is influenced by a smaller set of sophisticated or high-volume traders. "
+        "Reflects informed opinion, not broad public consensus."
+    )
 else:
-    rating = "CRITICAL - Extreme concentration, market likely whale-dominated"
+    signal_label = "Concentrated Capital Signal"
+    signal_description = (
+        "Price is driven by a small number of large wallets. "
+        "Does not represent crowd consensus — likely reflects concentrated positions."
+    )
 
-print(f"\nRating: {rating}")
+rating = signal_label
+
+print(f"\n  Signal Type : {signal_label}")
+print(f"  Description : {signal_description}")
 
 
 # ── 7. Save results ──────────────────────────────────────────────────
@@ -185,12 +224,22 @@ section("7. Saving results")
 
 wisdom_data = {
     "wisdom_score": float(wisdom_score),
+    "signal_label": signal_label,
     "rating": rating,
+    "sub_scores": {
+        "diversity_score": float(diversity_score),
+        "independence_score": float(independence_score),
+        "decentralization_score": float(decentralization_score),
+        "aggregation_score": float(aggregation_score),
+    },
     "metrics": {
         "top5_volume_share": float(top5_share),
+        "top10_volume_share": float(top10_share),
+        "suspicious_volume_share": float(suspicious_volume_share),
         "gini_coefficient": float(gini),
         "network_centralization": float(centralization),
         "modularity": float(modularity),
+        "outlier_rate": float(outlier_rate),
     },
     "network": {
         "nodes": G.number_of_nodes(),
@@ -207,8 +256,13 @@ print("Saved: wisdom_score_summary.json")
 with open(PROCESSED_DIR / "network_stats.txt", "w") as f:
     f.write("Network Analysis Summary\n")
     f.write("=" * 60 + "\n\n")
-    f.write(f"Wisdom Score: {wisdom_score:.1f} / 100\n")
-    f.write(f"Rating: {rating}\n\n")
+    f.write(f"Wisdom of Crowds Mechanism Score: {wisdom_score:.1f} / 100\n")
+    f.write(f"Signal Label: {signal_label}\n\n")
+    f.write("Sub-Scores (Surowiecki Conditions):\n")
+    f.write(f"  Diversity Score    : {diversity_score:.1f} / 100\n")
+    f.write(f"  Independence Score : {independence_score:.1f} / 100\n")
+    f.write(f"  Decentralization   : {decentralization_score:.1f} / 100\n")
+    f.write(f"  Aggregation Score  : {aggregation_score:.1f} / 100\n\n")
     f.write("Network Metrics:\n")
     f.write(f"  Nodes: {G.number_of_nodes():,}\n")
     f.write(f"  Edges: {G.number_of_edges():,}\n")
@@ -217,10 +271,159 @@ with open(PROCESSED_DIR / "network_stats.txt", "w") as f:
     f.write(f"  Modularity: {modularity:.4f}\n\n")
     f.write("Volume Concentration:\n")
     f.write(f"  Top 5 wallets: {top5_share:.1%}\n")
+    f.write(f"  Top 10 wallets: {top10_share:.1%}\n")
+    f.write(f"  Suspicious-group (DBSCAN cluster -1): {suspicious_volume_share:.1%}\n")
     f.write(f"  Gini coefficient: {gini:.3f}\n\n")
     f.write("Network Centralization:\n")
     f.write(f"  Freeman centralization: {centralization:.4f}\n")
 
 print("Saved: network_stats.txt")
+
+
+# ── 8. Marketing Recommendation Card ─────────────────────────────────
+section("8. Campaign Timing Recommendation")
+
+
+def generate_marketing_recommendation(
+    market_name: str,
+    wisdom_score: float,
+    signal_label: str,
+    dominant_wallet_type: str,
+    days_until_resolution: int,
+    current_probability: float | None = None,
+) -> None:
+    """Print a plain-English marketing recommendation card.
+
+    Parameters
+    ----------
+    market_name : str
+        Human-readable name of the prediction market.
+    wisdom_score : float
+        Composite Wisdom of Crowds Mechanism Score (0–100).
+    signal_label : str
+        One of 'Crowd Wisdom Signal', 'Expert Opinion Signal',
+        'Concentrated Capital Signal'.
+    dominant_wallet_type : str
+        e.g. 'Retail', 'Whale', 'Market Maker', 'Suspicious'.
+    days_until_resolution : int
+        Days remaining until the market resolves.
+    current_probability : float | None
+        Current YES probability (0–1). Used for citation copy.
+    """
+    # ── Signal type explanation ───────────────────────────────────────
+    if signal_label == "Crowd Wisdom Signal":
+        signal_explanation = (
+            "This market aggregates the beliefs of a large, diverse, and "
+            "independent group of traders — the conditions Surowiecki identifies "
+            "as necessary for a crowd to be smarter than any individual."
+        )
+    elif signal_label == "Expert Opinion Signal":
+        signal_explanation = (
+            "This market is driven by a smaller set of sophisticated or "
+            "high-volume traders. The number reflects informed opinion "
+            "rather than broad public consensus."
+        )
+    else:
+        signal_explanation = (
+            "This market is dominated by a small number of large capital "
+            "positions. The probability reflects concentrated bets, not "
+            "the aggregated judgment of a diverse crowd."
+        )
+
+    # ── Citation guidance ─────────────────────────────────────────────
+    prob_str = f"{current_probability*100:.0f}%" if current_probability is not None else "X%"
+    if wisdom_score >= 70:
+        citation = (
+            f'Suggested copy: "Prediction markets give {market_name} '
+            f'a {prob_str} probability."'
+        )
+    elif wisdom_score >= 40:
+        citation = (
+            f'Suggested copy: "Sophisticated traders currently price '
+            f'{market_name} at {prob_str}."'
+        )
+    else:
+        citation = (
+            "Do not cite this number directly — it reflects concentrated "
+            "capital positions, not crowd consensus. Reference the market "
+            "as an indicator of large-trader sentiment only."
+        )
+
+    # ── Campaign timing action ────────────────────────────────────────
+    if wisdom_score >= 70 and days_until_resolution > 7:
+        action = "PROCEED"
+        rationale = (
+            f"High crowd wisdom signal ({wisdom_score:.0f}/100) with "
+            f"{days_until_resolution}d until resolution — safe window "
+            "to build campaign around this probability."
+        )
+    elif wisdom_score >= 40 or days_until_resolution > 14:
+        action = "MONITOR"
+        rationale = (
+            f"Score of {wisdom_score:.0f}/100 ({signal_label}) and "
+            f"{days_until_resolution}d to resolution. Check again in "
+            "3–5 days; cite with appropriate qualification."
+        )
+    else:
+        action = "HOLD"
+        rationale = (
+            f"Score of {wisdom_score:.0f}/100 ({signal_label}) driven "
+            f"by {dominant_wallet_type} wallets. Citing this number "
+            "risks misleading the audience — wait for broader participation "
+            "or use a different signal."
+        )
+
+    # ── Print card ────────────────────────────────────────────────────
+    width = 70
+    print("\n" + "╔" + "═" * (width - 2) + "╗")
+    print("║" + "  CAMPAIGN TIMING RECOMMENDATION CARD".center(width - 2) + "║")
+    print("║" + f"  {market_name}".center(width - 2) + "║")
+    print("╠" + "═" * (width - 2) + "╣")
+
+    print("║" + "  1. SIGNAL TYPE".ljust(width - 2) + "║")
+    print("║" + f"     {signal_label}".ljust(width - 2) + "║")
+    for line in [signal_explanation[i:i+62] for i in range(0, len(signal_explanation), 62)]:
+        print("║" + f"     {line}".ljust(width - 2) + "║")
+    print("║" + "".ljust(width - 2) + "║")
+
+    print("║" + "  2. CITATION GUIDANCE".ljust(width - 2) + "║")
+    for line in [citation[i:i+62] for i in range(0, len(citation), 62)]:
+        print("║" + f"     {line}".ljust(width - 2) + "║")
+    print("║" + "".ljust(width - 2) + "║")
+
+    print("║" + "  3. CAMPAIGN TIMING ACTION".ljust(width - 2) + "║")
+    print("║" + f"     ▶  {action}".ljust(width - 2) + "║")
+    for line in [rationale[i:i+62] for i in range(0, len(rationale), 62)]:
+        print("║" + f"     {line}".ljust(width - 2) + "║")
+
+    print("║" + "".ljust(width - 2) + "║")
+    print("║" + f"  Wisdom Score: {wisdom_score:.1f}/100   Dominant Type: {dominant_wallet_type}   Days left: {days_until_resolution}".ljust(width - 2) + "║")
+    print("╚" + "═" * (width - 2) + "╝")
+
+
+# Determine dominant wallet type from cluster distribution
+cluster_counts_raw = {}
+for v in cluster_map.values():
+    cluster_counts_raw[v] = cluster_counts_raw.get(v, 0) + 1
+
+outlier_count = cluster_counts_raw.get(-1, 0)
+non_outlier_total = sum(v for k, v in cluster_counts_raw.items() if k != -1)
+outlier_pct = outlier_count / total_wallets if total_wallets > 0 else 0
+
+if outlier_pct > 0.15:
+    dominant_type = "Suspicious/Coordinated"
+elif top5_share > 0.30:
+    dominant_type = "Whale"
+else:
+    dominant_type = "Retail"
+
+generate_marketing_recommendation(
+    market_name="Polymarket Multi-Market Analysis",
+    wisdom_score=wisdom_score,
+    signal_label=signal_label,
+    dominant_wallet_type=dominant_type,
+    days_until_resolution=30,   # placeholder — update per market
+    current_probability=None,
+)
 
 print("\nPhase 5 complete. Ready for Phase 6 (Cross-Platform Comparison).")

@@ -1,0 +1,23 @@
+Mode 3 Temporal Causality Analysis Summary
+============================================================
+
+Method: Lead-lag cross-correlation (15-min bins, max lag 4 steps = 60 min)
+Markets analyzed: 124
+
+Aggregate lag-correlation profile (suspicious → retail):
+  Lag -4 ( -60min) [retail leads →]: 0.0241
+  Lag -3 ( -45min) [retail leads →]: 0.0396
+  Lag -2 ( -30min) [retail leads →]: 0.0486
+  Lag -1 ( -15min) [retail leads →]: 0.0570
+  Lag +0 (  +0min) [simultaneous ]: 0.0890
+  Lag +1 ( +15min) [susp leads →]: 0.0648
+  Lag +2 ( +30min) [susp leads →]: 0.0472
+  Lag +3 ( +45min) [susp leads →]: 0.0350
+  Lag +4 ( +60min) [susp leads →]: 0.0303
+
+Directional asymmetry (lead - follow): 0.0078
+t-test: t=0.628, p=0.5310
+Statistical result: NOT SIGNIFICANT (p>=0.05): no directional lead detected
+
+Mode 3 Risk: LOW
+Interpretation: No clear temporal leadership pattern: suspicious wallets do NOT systematically trade before retail wallets. Directional asymmetry is only 0.008 (p=0.531). This weakens the active manipulation hypothesis (Mode 3).

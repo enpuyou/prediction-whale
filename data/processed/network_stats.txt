@@ -1,8 +1,14 @@
 Network Analysis Summary
 ============================================================
 
-Wisdom Score: 62.1 / 100
-Rating: MODERATE - Some concentration but diversified participation
+Wisdom of Crowds Mechanism Score: 76.6 / 100
+Signal Label: Crowd Wisdom Signal
+
+Sub-Scores (Surowiecki Conditions):
+  Diversity Score    : 30.2 / 100
+  Independence Score : 93.0 / 100
+  Decentralization   : 100.0 / 100
+  Aggregation Score  : 83.3 / 100
 
 Network Metrics:
   Nodes: 63,793
@@ -13,6 +19,8 @@ Network Metrics:
 
 Volume Concentration:
   Top 5 wallets: 7.8%
+  Top 10 wallets: 12.0%
+  Suspicious-group (DBSCAN cluster -1): 69.8%
   Gini coefficient: 0.958
 
 Network Centralization:

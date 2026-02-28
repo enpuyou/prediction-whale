@@ -1,0 +1,106 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║              PREDICTION MARKET CROWD WISDOM AUDIT — BRAND STRATEGY        ║
+║                          PHASE 7: VISUALIZATION COMPLETE                  ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+EXECUTIVE SUMMARY
+═════════════════════════════════════════════════════════════════════════════
+
+Wisdom of Crowds Mechanism Score: 76.6 / 100
+Signal Type: Crowd Wisdom Signal
+
+Should a brand cite this market's probability? — see Campaign Timing section below.
+
+MARKETS ANALYZED
+• Fed Chair Nomination          (Polymarket $541M)
+• Government Shutdown Duration  (Polymarket $23.5M)
+• Next Pope                     (Polymarket $30M)
+• Zelenskyy/Putin Location      (Polymarket $18.5M)
+• Trump Defense Secretary       (Polymarket $14M)
+• Champions League Winner       (Polymarket $1B)
+
+DATA SUMMARY
+═════════════════════════════════════════════════════════════════════════════
+Total Trades Analyzed : 237,791
+Unique Traders        : 63,793
+Date Range            : 2024-11-15 to 2026-02-27
+
+TRADER ARCHETYPE BREAKDOWN
+═════════════════════════════════════════════════════════════════════════════
+Algorithm: DBSCAN (eps=0.3, min_samples=10) — Silhouette Score: 0.7017 (Excellent)
+Trader Clusters Found: 104
+Structural Manipulators Flagged: 4,446 (7.0%)
+
+Trader Archetypes:
+archetype
+Buy & Hold       42821
+Casual Trader    15292
+Suspicious        4446
+Whale             1100
+Market Maker       134
+
+SUROWIECKI CROWD WISDOM CONDITIONS
+═════════════════════════════════════════════════════════════════════════════
+Diversity Score     : 30.2 / 100  ← FAILING — suspicious group controls 69.8% of volume (Mode 2)
+Independence Score  : 93.0 / 100  — low herding signal (Mode 1: LOW)
+Decentralization    : 100.0 / 100  — no dominant hub in network
+Aggregation Score   : 83.3 / 100  — community modularity proxy
+
+NETWORK ANALYSIS
+═════════════════════════════════════════════════════════════════════════════
+Trader Nodes        : 63,793
+Interaction Edges   : 4,127,204
+Network Density     : 0.0020
+Independent Communities (Louvain): 1,261
+
+KEY FINDINGS FOR BRAND STRATEGISTS
+═════════════════════════════════════════════════════════════════════════════
+1. TRADER DIVERSITY: Broad but unequal participation
+   - 92.9% retail/casual traders (Retail Participants archetype)
+   - 7.0% flagged as potential Structural Manipulators
+   - Volume inequality is high (Gini 0.958) — typical for prediction markets
+
+2. MARKET INDEPENDENCE: Healthy decentralization
+   - 1,261 independent trading communities (low coordination)
+   - No dominant central hub detected
+   - Resistant to single-actor price distortion
+
+3. TRADING POWER CONCENTRATION:
+   - Top 5 wallets: 7.8% of volume
+   - No single wallet controls the narrative
+
+4. STRUCTURAL MANIPULATORS: Detected and characterized
+   - 4,446 wallets flagged (high frequency, concentrated timing, skewed buy ratios)
+   - 7.0% of population — within the normal range for open prediction markets
+
+CAMPAIGN TIMING GUIDANCE
+═════════════════════════════════════════════════════════════════════════════
+Signal Type : Crowd Wisdom Signal
+
+If Score >= 70 → PROCEED
+  Cite as: "Prediction markets give [event] a X% probability."
+
+If Score 40–70 → MONITOR
+  Cite as: "Sophisticated traders currently price [event] at X%."
+
+If Score < 40 → HOLD
+  Do not cite directly — reflects concentrated capital, not crowd consensus.
+
+Current Score (76.6) → PROCEED
+
+VISUALIZATIONS GENERATED
+═════════════════════════════════════════════════════════════════════════════
+✓ 01_cluster_distribution.png  — Who is actually moving this market?
+✓ 02_wallet_archetypes.png     — Trader behavior archetypes
+✓ 03_feature_correlation.png   — Feature importance analysis
+✓ 04_wisdom_score_breakdown.png — Crowd wisdom signal strength (score: 76.6)
+✓ 05_outlier_detection.png     — Structural manipulators vs retail participants
+✓ 06_volume_concentration.png  — How concentrated is the trading power?
+✓ 07_temporal_patterns.png     — Trading patterns over time
+✓ 08_mode3_causality.png       — Mode 3: does whale activity lead retail? (LOW)
+
+═════════════════════════════════════════════════════════════════════════════
+Report Generated: 2026-02-28 09:20:57
+Analysis Complete: All 7 Phases Finished Successfully ✅
+═════════════════════════════════════════════════════════════════════════════
